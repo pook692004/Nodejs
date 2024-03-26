@@ -14,7 +14,7 @@ module.exports = {
             clinicId: {
                 type: Sequelize.INTEGER
             },
-            specialltyId: {
+            specialtyId: {
                 type: Sequelize.INTEGER
             },
 

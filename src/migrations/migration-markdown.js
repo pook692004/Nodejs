@@ -24,7 +24,7 @@ module.exports = {
                 allowNull: true,
                 type: Sequelize.INTEGER
             },
-            specialityId: {
+            specialtyId: {
                 allowNull: true,
                 type: Sequelize.INTEGER
             },
