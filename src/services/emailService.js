@@ -54,6 +54,57 @@ let getBodyHTMLEmail = (dataSend) => {
     }
     return result;
 }
+
+let sendAttachment = async (dataSend) => {
+    let transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false, // Use `true` for port 465, `false` for all other ports
+        auth: {
+            user: process.env.EMAIL_APP,
+            pass: process.env.EMAIL_APP_PASSWORD,
+        },
+    })
+    let info = await transporter.sendMail({
+        from: '"Hello Hospital 👻 " <phucdu13412@gmail.com>', // sender address
+        to: dataSend.email, // list of receivers
+        subject: "Kết quả đặt lịch khám bệnh", // Subject line
+        html: getBodyHTMLEmailRemedy(dataSend),
+        attachments: [
+            {
+                filename: `remedy-${dataSend.patientId}-${new Date().getTime()}.png`,
+                content: dataSend.imgBase64.split('base64,')[1],
+                encoding: 'base64'
+            }
+        ]
+    })
+}
+
+let getBodyHTMLEmailRemedy = (dataSend) => {
+    let result = ''
+    if (dataSend.language === 'vi') {
+        result =
+            `
+            <h3>Xin Chào ${dataSend.patientName}!</h3>
+            <p>Bạn đã nhận được email này vì đã đặt lịch khám bệnh online trên Hello Hospital thành công</p>
+            <p>Thông tin đơn thuốc/ hóa đơn được gửi trong file đính kèm.</p>
+         
+            <div>Xin chân thành cảm ơn!</div>
+        `
+    }
+    if (dataSend.language === 'en') {
+        result =
+            `
+        <h3>Dear !</h3>
+        <p>You have received this email because you made an online medical appointment on Hello Hospital</p>
+        <p>Prescription/invoice information is sent in the attached file.</p>
+
+        <div>Sincerely thank!</div>
+        `
+    }
+    return result;
+}
 module.exports = {
-    sendSimpleEmail: sendSimpleEmail
+    sendSimpleEmail: sendSimpleEmail,
+    sendAttachment: sendAttachment
 }
